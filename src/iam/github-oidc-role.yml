@@ -1,0 +1,62 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: IAM resource
+Parameters:
+  GitHubOrg:
+    Type: String
+    Description: "github account name"
+  RepositoryName:
+    Type: String
+    Description: "github repo name"
+  ThumbprintList:
+    Type: String
+    Default: 6938fd4d98bab03faadb97b34396831e3780aea1
+  OidcProviderUrl:
+    Type: String
+    Default: https://token.actions.githubusercontent.com
+  GithubAudience:
+    Type: String
+    Default:  sts.amazonaws.com
+  
+
+Resources:
+  GitHubActionsRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: github-actions-role
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRoleWithWebIdentity
+            Principal:
+              Federated: !Ref GithubOidc
+            Condition:
+              StringLike:
+                token.actions.githubusercontent.com:sub: !Sub repo:${GitHubOrg}/${RepositoryName}:*
+      Policies:
+        - PolicyName: EcrPipelineRole
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ecr:GetAuthorizationToken
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:BatchGetImage
+                  - ecr:InitiateLayerUpload
+                  - ecr:PutImage
+                  - ecr:UploadLayerPart
+                  - ecr:ListImages
+                  - ecr:CompleteLayerUpload
+                  - ecr:BatchCheckLayerAvailability
+                Resource: !Sub arn:aws:ecr:ap-northeast-1:${AWS::AccountId}:repository/${RepositoryName}
+  GithubOidc:
+    Type: AWS::IAM::OIDCProvider
+    Properties:
+      Url: !Ref OidcProviderUrl
+      ClientIdList: 
+        - !Ref GithubAudience
+      ThumbprintList:
+        - !Ref ThumbprintList
