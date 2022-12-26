@@ -19,6 +19,22 @@ Parameters:
   
 
 Resources:
+
+  CodeDeployRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: 'CodeDeployServiceRole'
+      Path: /
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codedeploy.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AWSCodeDeployRoleForECS
+
   GitHubActionsRole:
     Type: AWS::IAM::Role
     Properties:
@@ -31,6 +47,7 @@ Resources:
               Federated: !Ref GithubOidc
             Condition:
               StringLike:
+                token.actions.githubusercontent.com:aud: sts.amazonaws.com
                 token.actions.githubusercontent.com:sub: !Sub repo:${GitHubOrg}/${RepositoryName}:*
       Policies:
         - PolicyName: EcrPipelineRole
@@ -43,6 +60,7 @@ Resources:
                 Resource: '*'
               - Effect: Allow
                 Action:
+                  - ecs:*
                   - ecr:GetDownloadUrlForLayer
                   - ecr:BatchGetImage
                   - ecr:InitiateLayerUpload
