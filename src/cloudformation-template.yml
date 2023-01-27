@@ -1,0 +1,14 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Resources: 
+  Iam:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./iam/roles.yml
+      Parameters:
+        Common: True
+
+
+Outputs:
+  EcsTaskExecutionRole:
+    Value: !GetAtt Iam.Outputs.EcsTaskExecutionRole

@@ -1,0 +1,14 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  Iam:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://s3.ap-northeast-1.amazonaws.com/cfn-build-objects/account-commons/d18f643a999b35a783e45163db1a73bd.template
+      Parameters:
+        Common: true
+Outputs:
+  EcsTaskExecutionRole:
+    Value:
+      Fn::GetAtt:
+      - Iam
+      - Outputs.EcsTaskExecutionRole
