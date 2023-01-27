@@ -12,3 +12,6 @@ Outputs:
       Fn::GetAtt:
       - Iam
       - Outputs.EcsTaskExecutionRole
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-EcsTaskExecutionRole

@@ -12,3 +12,5 @@ Resources:
 Outputs:
   EcsTaskExecutionRole:
     Value: !GetAtt Iam.Outputs.EcsTaskExecutionRole
+    Export:
+      Name: !Sub '${AWS::StackName}-EcsTaskExecutionRole'
