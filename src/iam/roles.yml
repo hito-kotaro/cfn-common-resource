@@ -23,6 +23,25 @@ Resources:
         - Key: Common
           Value: !Ref Common
 
+  CodeDeployRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: codedeploy-service-role
+      Path: /
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codedeploy.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AWSCodeDeployRoleForECS
+      Tags:
+        - Key: Common
+          Value: !Ref Common
 Outputs:
   EcsTaskExecutionRole:
     Value: !GetAtt EcsTaskExecutionRole.Arn
+  CodeDeployRole:
+    Value: !GetAtt CodeDeployRole.Arn

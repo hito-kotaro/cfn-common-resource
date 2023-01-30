@@ -14,3 +14,7 @@ Outputs:
     Value: !GetAtt Iam.Outputs.EcsTaskExecutionRole
     Export:
       Name: !Sub '${AWS::StackName}-EcsTaskExecutionRole'
+  CodeDeployRole:
+    Value: !GetAtt Iam.Outputs.CodeDeployRole
+    Export:
+      Name: !Sub '${AWS::StackName}-CodeDeployRole'

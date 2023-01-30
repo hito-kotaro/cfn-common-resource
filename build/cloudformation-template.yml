@@ -3,7 +3,7 @@ Resources:
   Iam:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://s3.ap-northeast-1.amazonaws.com/cfn-build-objects/account-commons/d18f643a999b35a783e45163db1a73bd.template
+      TemplateURL: https://s3.ap-northeast-1.amazonaws.com/cfn-build-objects/account-commons/569953072fd7e1aeaeca6afe5f40a69d.template
       Parameters:
         Common: true
 Outputs:
@@ -15,3 +15,11 @@ Outputs:
     Export:
       Name:
         Fn::Sub: ${AWS::StackName}-EcsTaskExecutionRole
+  CodeDeployRole:
+    Value:
+      Fn::GetAtt:
+      - Iam
+      - Outputs.CodeDeployRole
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-CodeDeployRole
